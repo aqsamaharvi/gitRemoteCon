@@ -1,12 +1,12 @@
 exports.halls = function (req,res){
-    res.send("Admin Halls");
+    res.send("Halls");
 }
 exports.cattering = function (req,res){
-    res.send("Admin Cattering");
+    res.send("Cattering");
 }
 exports.vehicles = function (req,res){
-    res.send("Admin Vehicles");
+    res.send("Vehicles");
 }
 exports.decore = function (req,res){
-    res.send("Admin Decorations");
+    res.send("Decorations");
 }
