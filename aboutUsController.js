@@ -2,4 +2,4 @@ function aboutus(req,res){
     res.send("About us");
 };
 
-module.exports = aboutus;
+module.exports = aboutus; 
