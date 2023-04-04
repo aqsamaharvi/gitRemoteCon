@@ -15,4 +15,4 @@ router.get("/admin/cattering", (req,res)=>cattering(req,res));
 router.get("/admin/vehicles", (req,res)=>vehicles(req,res));
 router.get("/admin/decore", (req,res)=>decore(req,res));
 
-module.exports = router;
+module.exports = router; 
