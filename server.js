@@ -1,41 +1,31 @@
-const express = require("express");
-const cors = require("cors");
-const app = express();
-const db = require("./models/index");
-const tutorialRoutes = require("./routes/turorial.routes");
-const videoRoutes = require("./routes/video.routes");
+const express = require('express')
+const cors = require('cors')
+const registeredRoutes = require('./routes/regRoute.js');
+const caterinRoute = require('./routes/caterRoute.js');
+const hallRoute = require('./routes/hallRoute.js');
+const dressRoute = require('./routes/dressRoute.js');
+const salonRoute = require('./routes/salonRoute.js');
+const vehicleRoute = require('./routes/vehicleRoute.js');
+const feedbackRoute = require('./routes/feedbackRoute.js');
 
-var corsOptions = {
-  origin: "http://localhost:8081",
-};
-
-app.use(cors(corsOptions));
-
-// parse requests of content-type - application/json
+const app = express()
+// Register the registered routes
 app.use(express.json());
+app.use('/registered', registeredRoutes);
+app.use('/catering', caterinRoute);
+app.use('/hall', hallRoute);
+app.use('/dress', dressRoute);
+app.use('/salon', salonRoute);
+app.use('/vehicle', vehicleRoute);
+app.use('/feedback', feedbackRoute);
 
-// parse requests of content-type - application/x-www-form-urlencoded
-app.use(express.urlencoded({ extended: true }));
-
-app.use("/api/tutorials", tutorialRoutes);
-app.use("/api/videos",videoRoutes);
-
-db.sequelize
-  .sync()
-  .then(() => {
-    console.log("Synced db.");
-  })
-  .catch((err) => {
-    console.log("Failed to sync db: " + err.message);
-  });
-
-// simple route
-app.get("/", (req, res) => {
-  res.json({ message: "Welcome to CRUD Application!" });
-});
-
-// set port, listen for requests
-const PORT = process.env.PORT || 5000;
+// Start the server
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`Server is running on port http://127.0.01:${PORT} .`);
+  console.log(`Server listening on port ${PORT}`);
 });
+
+
+
+
+

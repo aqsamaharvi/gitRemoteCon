@@ -1,158 +1,149 @@
 const db = require("../model");
-const Feedback = db.feedback;
+const Dress = db.dress;
 const Op = db.Sequelize.Op;
 
-// Create and Save a new Feedback
+// Create and Save a new Dress
 exports.create = (req, res) => {
   // Validate request
-  if (!req.body.discription) {
+  if (!req.body.brand) {
     res.status(400).send({
       message: "Content can not be empty!",
     });
     return;
   }
 
-  // Create a Feedback
+  // Create a Dress
   const dress = {
-    discription: req.body.discription
+    brand: req.body.brand,
+    price: req.body.price,
+    date: req.body.date ,
   };
 
-  // Save Feedback in the database
-  Feedback.create(dress)
+  // Save Dress in the database
+  Dress.create(dress)
     .then((data) => {
       res.send(data);
     })
     .catch((err) => {
       res.status(500).send({
         message:
-          err.message || "Some error occurred while creating the Feedback.",
+          err.message || "Some error occurred while creating the Dress.",
       });
     });
 };
 
-// Retrieve all Feedback from the database.  using pagination
+// Retrieve all Dress from the database.
 exports.findAll = (req, res) => {
   const limit = req.query.limit ? parseInt(req.query.limit) : 10; // default limit is 10
   const page = req.query.page ? parseInt(req.query.page) : 1; // default page is 1
 
   const offset = (page - 1) * limit; // calculate offset based on page and limit
 
-  Feedback.findAndCountAll({
+  const brand = req.query.brand;
+  var condition = brand ? { brand: { [Op.like]: `%${brand}%` } } : null;
+
+  Dress.findAndCountAll({ 
     limit: limit,
     offset: offset,
-  })
+    where: condition })
     .then((data) => {
       const pages = Math.ceil(data.count / limit); // calculate the total number of pages
-      res.send({ data: data.rows, pages: pages, currentPage: page });
+      res.send({data: data.rows, pages: pages, currentPage: page});
     })
     .catch((err) => {
       res.status(500).send({
         message:
-          err.message || "Some error occurred while retrieving Feedback.",
+          err.message || "Some error occurred while retrieving Dress.",
       });
     });
 };
 
-// Find a single Feedback with an id
+// Find a single Dress with an id
 exports.findOne = (req, res) => {
   const id = req.params.id;
 
-  Feedback.findByPk(id)
+  Dress.findByPk(id)
     .then((data) => {
       if (data) {
         res.send(data);
       } else {
         res.status(404).send({
-          message: `Cannot find Feedback with id=${id}.`,
+          message: `Cannot find Dress with id=${id}.`,
         });
       }
     })
     .catch((err) => {
       res.status(500).send({
-        message: "Error retrieving Feedback with id=" + id,
+        message: "Error retrieving Dress with id=" + id,
       });
     });
 };
 
-// Update a Feedback by the id in the request
+// Update a Dress by the id in the request
 exports.update = (req, res) => {
   const id = req.params.id;
 
-  Feedback.update(req.body, {
+  Dress.update(req.body, {
     where: { id: id },
   })
     .then((num) => {
       if (num == 1) {
         res.send({
-          message: "Feedback was updated successfully.",
+          message: "Dress was updated successfully.",
         });
       } else {
         res.send({
-          message: `Cannot update Feedback with id=${id}. Maybe Feedback was not found or req.body is empty!`,
+          message: `Cannot update Dress with id=${id}. Maybe Dress was not found or req.body is empty!`,
         });
       }
     })
     .catch((err) => {
       res.status(500).send({
-        message: "Error updating Feedback with id=" + id,
+        message: "Error updating Dress with id=" + id,
       });
     });
 };
 
-// Delete a Feedback with the specified id in the request
+// Delete a Dress with the specified id in the request
 exports.delete = (req, res) => {
   const id = req.params.id;
 
-  Feedback.destroy({
+  Dress.destroy({
     where: { id: id },
   })
     .then((num) => {
       if (num == 1) {
         res.send({
-          message: "Feedback was deleted successfully!",
+          message: "Dress was deleted successfully!",
         });
       } else {
         res.send({
-          message: `Cannot delete Feedback with id=${id}. Maybe Feedback was not found!`,
+          message: `Cannot delete Dress with id=${id}. Maybe Dress was not found!`,
         });
       }
     })
     .catch((err) => {
       res.status(500).send({
-        message: "Could not delete Feedback with id=" + id,
+        message: "Could not delete Dress with id=" + id,
       });
     });
 };
 
-// Delete all Feedbacks from the database.
+// Delete all Dresses from the database.
 exports.deleteAll = (req, res) => {
-  Feedback.destroy({
+  Dress.destroy({
     where: {},
     truncate: false,
   })
     .then((nums) => {
-      res.send({ message: `${nums} Feedback were deleted successfully!` });
+      res.send({ message: `${nums} Dress were deleted successfully!` });
     })
     .catch((err) => {
       res.status(500).send({
         message:
-          err.message || "Some error occurred while removing all Feedbacks.",
+          err.message || "Some error occurred while removing all Dresses.",
       });
     });
 };
 
- 
 
-/* exports.findAndCountAll = (req, res) => {
-  limit : 1
-  Feedback.findAndCountAll()
-    .then((data) => {
-      res.send(data);
-    })
-    .catch((err) => {
-      res.status(500).send({
-        message:
-          err.message || "Some error occurred while retrieving Feedback.",
-      });
-    });
-};*/
