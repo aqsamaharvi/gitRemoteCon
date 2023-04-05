@@ -9,4 +9,4 @@ exports.vehicles = function (req,res){
 }
 exports.decore = function (req,res){
     res.send("Decorations");
-}
+} 
